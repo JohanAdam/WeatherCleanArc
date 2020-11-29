@@ -22,7 +22,7 @@ import javax.inject.Singleton;
         ActivityBindingModule.class
     }
 )
-interface AppComponent extends AndroidInjector<App> {
+public interface AppComponent extends AndroidInjector<App> {
 
   @Component.Builder
   interface Builder {

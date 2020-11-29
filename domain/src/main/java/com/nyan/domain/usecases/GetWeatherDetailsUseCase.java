@@ -5,7 +5,7 @@ import com.nyan.domain.repositories.RemoteRepo;
 import io.reactivex.Single;
 import javax.inject.Inject;
 
-class GetWeatherDetailsUseCase implements SingleUseCase<WeatherDetailsModel> {
+public class GetWeatherDetailsUseCase implements SingleUseCase<WeatherDetailsModel> {
 
   private RemoteRepo remoteRepo;
 

@@ -2,7 +2,6 @@ package com.nyan.data.di;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nyan.weather.BuildConfig;
 import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.TimeUnit;
@@ -18,18 +17,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
+  public NetworkModule() {
+
+  }
+
   @Provides
-  OkHttpClient provideOkHttpClient() {
+  public OkHttpClient provideOkHttpClient() {
 
     //Setup logging.
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    if (BuildConfig.DEBUG) {
-      //Logging for debug mode.
-      logging.level(Level.BODY);
-    } else {
+    logging.level(Level.BODY);
+//    if (BuildConfig.DEBUG) {
+//      Logging for debug mode.
+//      logging.level(Level.BODY);
+//    } else {
       //Logging for production mode.
-      logging.level(Level.BASIC);
-    }
+//      logging.level(Level.BASIC);
+//    }
 
     //Setup client.
    return new OkHttpClient.Builder()
@@ -52,7 +56,7 @@ public class NetworkModule {
 
   @Provides
   @Named("auth_retrofit")
-  Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+  public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
         .baseUrl("api.openweathermap.org/data/2.5/")
         .addConverterFactory(GsonConverterFactory.create())
