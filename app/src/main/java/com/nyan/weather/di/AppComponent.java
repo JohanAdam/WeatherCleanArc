@@ -1,6 +1,5 @@
 package com.nyan.weather.di;
 
-import android.app.Application;
 import com.nyan.data.di.ApiModule;
 import com.nyan.data.di.NetworkModule;
 import com.nyan.weather.App;
@@ -28,9 +27,11 @@ public interface AppComponent extends AndroidInjector<App> {
   interface Builder {
 
     @BindsInstance
-    Builder application(Application application);
+    Builder application(App application);
 
     AppComponent build();
   }
+
+//  void inject(App app);
 
 }

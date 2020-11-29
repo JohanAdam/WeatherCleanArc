@@ -39,16 +39,16 @@ dependencies {
 //    implementation 'com.google.code.gson:gson:2.8.6'
 
     //OkHttp
-//    implementation "com.squareup.okhttp:okhttp:$okHttpVersion"
-//    implementation "com.squareup.okhttp3:okhttp:$okHttp3Version"
-//    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3Version"
+    implementation "com.squareup.okhttp:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttp3Version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3Version"
 
     //Retrofit
-//    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-//    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-////    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
-//    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-//    implementation "com.squareup.retrofit2:converter-scalars:$retrofitConverterScalarsVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+//    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitConverterScalarsVersion"
 
     //RxJava2
 ////    implementation "io.reactivex:rxandroid:$rxAndroidVersion"
@@ -60,6 +60,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:2.20"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 
 
     //ViewModel.
