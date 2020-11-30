@@ -11,23 +11,26 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.weather.viewmodel.MainViewModel;
+import com.nyan.weather.viewmodel.MainViewModelFactory;
+import dagger.android.AndroidInjection;
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
   @Inject
-  ViewModelProvider.Factory viewModelFactory;
+  MainViewModelFactory viewModelFactory;
 
   private MainViewModel mainViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    AndroidInjection.inject(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    mainViewModel = viewModelFactory.create(MainViewModel.class);
+    mainViewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
     FloatingActionButton fab = findViewById(R.id.fab);
     fab.setOnClickListener(new View.OnClickListener() {

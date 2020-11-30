@@ -8,7 +8,6 @@ import com.nyan.weather.rx.SchedulersProvider;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import javax.inject.Inject;
 
 
 public class MainViewModel extends ViewModel {
@@ -20,8 +19,7 @@ public class MainViewModel extends ViewModel {
   private MutableLiveData<WeatherDetailsModel> weatherDetailsLiveData = new MutableLiveData<>();
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-  @Inject
-  MainViewModel(GetWeatherDetailsUseCase getWeatherDetailsUseCase, SchedulersProvider schedulersProvider) {
+  public MainViewModel(GetWeatherDetailsUseCase getWeatherDetailsUseCase, SchedulersProvider schedulersProvider) {
     this.weatherUseCase = getWeatherDetailsUseCase;
     this.schedulersProvider = schedulersProvider;
   }

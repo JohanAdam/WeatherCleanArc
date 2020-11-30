@@ -1,25 +1,30 @@
 package com.nyan.weather;
 
-import android.content.Context;
-import com.nyan.weather.di.AppComponent;
+import android.app.Activity;
+import android.app.Application;
+import com.nyan.weather.di.DaggerAppComponent;
 import dagger.android.AndroidInjector;
-import dagger.android.DaggerApplication;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
+import javax.inject.Inject;
 
-public class App extends DaggerApplication {
+public class App extends Application implements HasActivityInjector {
 
-  private AppComponent appComponent;
+  @Inject
+  DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
   @Override
-  protected void attachBaseContext(Context base) {
-    super.attachBaseContext(base);
+  public void onCreate() {
+    super.onCreate();
+
+    DaggerAppComponent.builder()
+        .application(this)
+        .build()
+        .inject(this);
   }
 
   @Override
-  protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-    appComponent = DaggerAppComponent.builder()
-        .application(this)
-        .build();
-
-    return appComponent;
+  public AndroidInjector<Activity> activityInjector() {
+    return dispatchingAndroidInjector;
   }
 }

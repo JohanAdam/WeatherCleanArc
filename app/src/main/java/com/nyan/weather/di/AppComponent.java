@@ -5,8 +5,6 @@ import com.nyan.data.di.NetworkModule;
 import com.nyan.weather.App;
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
-import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import javax.inject.Singleton;
 
@@ -17,11 +15,10 @@ import javax.inject.Singleton;
         ApiModule.class,
         AppModule.class,
         AndroidSupportInjectionModule.class,
-        AndroidInjectionModule.class,
-        ActivityBindingModule.class
+        BuilderModule.class
     }
 )
-public interface AppComponent extends AndroidInjector<App> {
+public interface AppComponent{
 
   @Component.Builder
   interface Builder {
@@ -32,6 +29,6 @@ public interface AppComponent extends AndroidInjector<App> {
     AppComponent build();
   }
 
-//  void inject(App app);
+  void inject(App app);
 
 }
