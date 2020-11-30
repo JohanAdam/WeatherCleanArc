@@ -2,25 +2,37 @@ package com.nyan.weather.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import com.nyan.domain.models.LocationDomainModel;
 import com.nyan.domain.models.WeatherDetailsModel;
+import com.nyan.domain.usecases.GetLocationUseCase;
 import com.nyan.domain.usecases.GetWeatherDetailsUseCase;
+import com.nyan.weather.model.LocationModel;
 import com.nyan.weather.rx.SchedulersProvider;
+import com.nyan.weather.utils.PermissionManager;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import timber.log.Timber;
 
 
 public class MainViewModel extends ViewModel {
 
   private GetWeatherDetailsUseCase weatherUseCase;
+  private GetLocationUseCase locationUseCase;
   private SchedulersProvider schedulersProvider;
 
+  private MutableLiveData<WeatherDetailsModel> _weatherDetailsLiveData = new MutableLiveData<>();
+  private MutableLiveData<LocationModel> _locationModel = new MutableLiveData<>();
 
-  private MutableLiveData<WeatherDetailsModel> weatherDetailsLiveData = new MutableLiveData<>();
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-  public MainViewModel(GetWeatherDetailsUseCase getWeatherDetailsUseCase, SchedulersProvider schedulersProvider) {
+  public MainViewModel(GetWeatherDetailsUseCase getWeatherDetailsUseCase,
+      GetLocationUseCase getLocationUseCase,
+      SchedulersProvider schedulersProvider) {
     this.weatherUseCase = getWeatherDetailsUseCase;
+    this.locationUseCase = getLocationUseCase;
     this.schedulersProvider = schedulersProvider;
   }
 
@@ -35,7 +47,7 @@ public class MainViewModel extends ViewModel {
 
           @Override
           public void onSuccess(WeatherDetailsModel weatherDetailsModel) {
-            weatherDetailsLiveData.postValue(weatherDetailsModel);
+            _weatherDetailsLiveData.postValue(weatherDetailsModel);
           }
 
           @Override
@@ -46,7 +58,67 @@ public class MainViewModel extends ViewModel {
   }
 
   public MutableLiveData<WeatherDetailsModel> getWeatherLiveData() {
-    return weatherDetailsLiveData;
+    return _weatherDetailsLiveData;
+  }
+
+  public MutableLiveData<LocationModel> getLocationLiveData() {
+    return _locationModel;
+  }
+
+  public void onRequestPermissionRequest(int requestCode, int[] grantResults) {
+    Timber.d("onRequestPermissionRequest " + requestCode + " grantResult " + grantResults);
+    if (requestCode == PermissionManager.LOCATION_PERMISSION_REQUEST_CODE) {
+      if (grantResults.length != 0) {
+        switch (grantResults[0]) {
+          case PermissionManager.PERMISSION_GRANTED:
+            onLocationPermissionGranted();
+            break;
+          case PermissionManager.PERMISSION_DENIED:
+            onLocationPermissionDenied();
+            break;
+        }
+      }
+    }
+  }
+
+  public void onLocationPermissionGranted() {
+    Timber.d("onLocationPermissionGranted");
+    Disposable disposable = locationUseCase
+        .build()
+        .subscribeOn(schedulersProvider.io())
+        .map(new Function<LocationDomainModel, LocationModel>() {
+          @Override
+          public LocationModel apply(LocationDomainModel locationDomainModel) throws Exception {
+            return new LocationModel(locationDomainModel.getLatitude(), locationDomainModel.getLongitude());
+          }
+        })
+        .doOnError(new Consumer<Throwable>() {
+          @Override
+          public void accept(Throwable throwable) throws Exception {
+            getLocationError(throwable);
+          }
+        })
+        .subscribe(new Consumer<LocationModel>() {
+          @Override
+          public void accept(LocationModel locationModel) throws Exception {
+            getLocationSuccess(locationModel);
+          }
+        });
+    compositeDisposable.add(disposable);
+  }
+
+  private void onLocationPermissionDenied() {
+    Timber.e("onLocationPermissionDenied");
+  }
+
+  private void getLocationSuccess(LocationModel locationModel) {
+    Timber.e("getLocationSuccess");
+    _locationModel.postValue(locationModel);
+  }
+
+  private void getLocationError(Throwable throwable) {
+    Timber.e("getLocationError");
+    throwable.printStackTrace();
   }
 
   @Override

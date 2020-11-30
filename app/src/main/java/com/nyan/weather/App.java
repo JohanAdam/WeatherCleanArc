@@ -7,6 +7,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class App extends Application implements HasActivityInjector {
 
@@ -16,6 +17,12 @@ public class App extends Application implements HasActivityInjector {
   @Override
   public void onCreate() {
     super.onCreate();
+
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree());
+    } else {
+//      Timber.plant(new ReleaseTree());
+    }
 
     DaggerAppComponent.builder()
         .application(this)

@@ -29,6 +29,8 @@ ext {
     rxJavaVersion = '2.2.2'
     daggerVersion = '2.11'
     glassfishAnnotation = '10.0-b28'
+    tedPermissionVersion = '2.2.2'
+    timberVersion = '4.7.1'
 }
 
 task clean(type: Delete) {

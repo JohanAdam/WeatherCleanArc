@@ -3,17 +3,22 @@ package com.nyan.weather;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nyan.domain.models.WeatherDetailsModel;
+import com.nyan.weather.model.LocationModel;
+import com.nyan.weather.utils.PermissionManager;
 import com.nyan.weather.viewmodel.MainViewModel;
 import com.nyan.weather.viewmodel.MainViewModelFactory;
 import dagger.android.AndroidInjection;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
   MainViewModelFactory viewModelFactory;
 
   private MainViewModel mainViewModel;
+
+  private PermissionManager permissionManager = new PermissionManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +58,42 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
+
+    fab.setOnLongClickListener(new OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        Timber.d("onLongClick!");
+        requestLocationPermission();
+        return false;
+      }
+    });
+
+    mainViewModel.getLocationLiveData().observe(this, new Observer<LocationModel>() {
+      @Override
+      public void onChanged(LocationModel locationModel) {
+        Timber.d("onChanged location!");
+        Toast.makeText(MainActivity.this, "lat " + locationModel.getLatitude() + " lon "  + locationModel.getLongitude(), Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
-//  @Override
+  private void requestLocationPermission() {
+    Timber.d("requestLocationPermission");
+    if (permissionManager.isLocationPermissionGranted(this)) {
+      mainViewModel.onLocationPermissionGranted();
+    } else {
+      permissionManager.requestLocationPermission(this);
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    mainViewModel.onRequestPermissionRequest(requestCode, grantResults);
+  }
+
+  //  @Override
 //  public boolean onCreateOptionsMenu(Menu menu) {
 //    // Inflate the menu; this adds items to the action bar if it is present.
 //    getMenuInflater().inflate(R.menu.menu_main, menu);
