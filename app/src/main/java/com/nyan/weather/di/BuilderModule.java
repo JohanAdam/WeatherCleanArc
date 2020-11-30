@@ -4,11 +4,10 @@ import com.nyan.weather.MainActivity;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
-//@Module(includes = ViewModelModule.class)
 @Module
-public abstract class ActivityBindingModule {
+public abstract class BuilderModule {
 
-  @ContributesAndroidInjector(modules = ViewModelModule.class)
+  @ContributesAndroidInjector(modules = MainActivityModule.class)
   abstract MainActivity bindMainActivity();
 
 

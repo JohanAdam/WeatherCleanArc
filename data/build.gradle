@@ -49,4 +49,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttp3Version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3Version"
 
+    //Location.
+    implementation "com.google.android.gms:play-services-location:17.1.0"
+
+
 }

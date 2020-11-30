@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -55,10 +54,9 @@ public class NetworkModule {
   }
 
   @Provides
-  @Named("auth_retrofit")
   public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
-        .baseUrl("api.openweathermap.org/data/2.5/")
+        .baseUrl("http://api.openweathermap.org/")
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)

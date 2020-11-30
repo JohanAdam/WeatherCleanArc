@@ -5,18 +5,15 @@ import com.nyan.data.mappers.WeatherMapper;
 import com.nyan.data.models.WeatherDataModel;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.domain.repositories.RemoteRepo;
-import dagger.Lazy;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
-import javax.inject.Inject;
 
-class RemoteRepoImpl implements RemoteRepo {
+public class RemoteRepoImpl implements RemoteRepo {
 
   private ApiService apiService;
-  private Lazy<WeatherMapper> weatherMapper;
+  private WeatherMapper weatherMapper;
 
-  @Inject
-  RemoteRepoImpl(ApiService apiService, Lazy<WeatherMapper> weatherMapper){
+  public RemoteRepoImpl(ApiService apiService, WeatherMapper weatherMapper){
      this.apiService = apiService;
      this.weatherMapper = weatherMapper;
   }
@@ -27,7 +24,7 @@ class RemoteRepoImpl implements RemoteRepo {
         .map(new Function<WeatherDataModel, WeatherDetailsModel>() {
           @Override
           public WeatherDetailsModel apply(WeatherDataModel weatherDataModel) {
-            return weatherMapper.get().toWeatherDetails(weatherDataModel);
+            return weatherMapper.toWeatherDetails(weatherDataModel);
           }
         });
   }

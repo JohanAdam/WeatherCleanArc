@@ -10,15 +10,13 @@ import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.domain.models.Wind;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
 
 /**
  * Mapper to map the NetworkModel(DataModel) to DomainModel.
  */
 public class WeatherMapper {
 
-  @Inject
-  WeatherMapper(){
+  public WeatherMapper(){
 
   }
 
