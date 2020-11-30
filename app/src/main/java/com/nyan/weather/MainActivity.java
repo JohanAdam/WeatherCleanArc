@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.weather.databinding.ActivityMainBinding;
@@ -56,9 +57,21 @@ public class MainActivity extends AppCompatActivity {
     mainViewModel.getErrorMsg().observe(this, msg -> {
       Snackbar.make(rootView, msg, Snackbar.LENGTH_LONG).show();
     });
+
+    requestLocationPermission();
   }
 
   private void setView(WeatherDetailsModel weatherDetailsModel) {
+
+    String uri_base_icon = "http://openweathermap.org/img/wn/---@4x.png";
+    uri_base_icon = uri_base_icon.replace("---", weatherDetailsModel.getWeather().get(0).getIcon());
+    Timber.d("icon link %s", uri_base_icon);
+
+    Glide.with(this)
+        .load(uri_base_icon)
+        .fitCenter()
+        .placeholder(R.drawable.ic_refresh_light)
+        .into(binding.ivIconForecast);
 
     //Set lat lon.
     binding.tvLatLon.setText("Latitude : ".concat(String.valueOf(weatherDetailsModel.getCoord().getLat())).concat(" Longitude : ").concat(String.valueOf(weatherDetailsModel.getCoord().getLon())));
