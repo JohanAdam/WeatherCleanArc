@@ -2,15 +2,12 @@ package com.nyan.weather;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.snackbar.Snackbar;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.weather.databinding.ActivityMainBinding;
-import com.nyan.weather.model.LocationModel;
 import com.nyan.weather.utils.PermissionManager;
 import com.nyan.weather.viewmodel.MainViewModel;
 import com.nyan.weather.viewmodel.MainViewModelFactory;
@@ -35,48 +32,48 @@ public class MainActivity extends AppCompatActivity {
     AndroidInjection.inject(this);
     super.onCreate(savedInstanceState);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
-    View view = binding.getRoot();
-    setContentView(view);
+    View rootView = binding.getRoot();
+    setContentView(rootView);
 
     setSupportActionBar(binding.toolbar);
 
     mainViewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
-    binding.fab.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-//        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//            .setAction("Action", null).show();
-        mainViewModel.getWeatherData();
+    binding.fab.setOnClickListener(view -> requestLocationPermission());
+
+    mainViewModel.getWeatherLiveData().observe(this, weatherDetailsModel -> {
+      Timber.d("onChanged");
+      if (weatherDetailsModel != null) {
+        setView(weatherDetailsModel);
       }
     });
 
-    mainViewModel.getWeatherLiveData().observe(this, new Observer<WeatherDetailsModel>() {
-      @Override
-      public void onChanged(WeatherDetailsModel weatherDetailsModel) {
-        Timber.d("onChanged");
-        if (weatherDetailsModel != null) {
-          Toast.makeText(MainActivity.this, weatherDetailsModel.getWeather().get(0).getMain(), Toast.LENGTH_SHORT).show();
-        }
-      }
+    mainViewModel.getLocationLiveData().observe(this, locationModel -> {
+      Timber.d("onChanged location!");
+      mainViewModel.getWeatherData(locationModel.getLatitude(), locationModel.getLongitude());
     });
 
-    binding.fab.setOnLongClickListener(new OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Timber.d("onLongClick!");
-        requestLocationPermission();
-        return false;
-      }
+    mainViewModel.getErrorMsg().observe(this, msg -> {
+      Snackbar.make(rootView, msg, Snackbar.LENGTH_LONG).show();
     });
+  }
 
-    mainViewModel.getLocationLiveData().observe(this, new Observer<LocationModel>() {
-      @Override
-      public void onChanged(LocationModel locationModel) {
-        Timber.d("onChanged location!");
-        Toast.makeText(MainActivity.this, "lat " + locationModel.getLatitude() + " lon "  + locationModel.getLongitude(), Toast.LENGTH_SHORT).show();
-      }
-    });
+  private void setView(WeatherDetailsModel weatherDetailsModel) {
+
+    //Set lat lon.
+    binding.tvLatLon.setText("Latitude : ".concat(String.valueOf(weatherDetailsModel.getCoord().getLat())).concat(" Longitude : ").concat(String.valueOf(weatherDetailsModel.getCoord().getLon())));
+
+    //Location name.
+    binding.tvLocation.setText(weatherDetailsModel.getName());
+
+    //Forecast.
+    binding.tvWeatherForecast.setText(weatherDetailsModel.getWeather().get(0).getMain());
+
+    //Forecast description.
+    binding.tvWeatherDescription.setText(weatherDetailsModel.getWeather().get(0).getDescription());
+
+    //Temperature.
+    binding.tvTemp.setText(String.valueOf(weatherDetailsModel.getMain().getTemp()).concat(getResources().getString(R.string.celcius)));
   }
 
   private void requestLocationPermission() {

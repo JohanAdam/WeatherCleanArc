@@ -14,8 +14,8 @@ public class GetWeatherDetailsUseCase implements SingleUseCase<WeatherDetailsMod
 
 
   @Override
-  public Single<WeatherDetailsModel> execute() {
-    return remoteRepo.getCurrentWeather();
+  public Single<WeatherDetailsModel> execute(String lat, String lon) {
+    return remoteRepo.getCurrentWeather(lat, lon);
   }
 
 }

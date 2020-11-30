@@ -5,6 +5,6 @@ import io.reactivex.Single;
 
 public interface RemoteRepo {
 
-  Single<WeatherDetailsModel> getCurrentWeather();
+  Single<WeatherDetailsModel> getCurrentWeather(String lat, String lon);
 
 }

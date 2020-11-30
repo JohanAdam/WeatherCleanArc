@@ -22,6 +22,7 @@ public class MainViewModel extends ViewModel {
 
   private MutableLiveData<WeatherDetailsModel> _weatherDetailsLiveData = new MutableLiveData<>();
   private MutableLiveData<LocationModel> _locationModel = new MutableLiveData<>();
+  private MutableLiveData<String> _errorMsg = new MutableLiveData<>();
 
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -33,8 +34,8 @@ public class MainViewModel extends ViewModel {
     this.schedulersProvider = schedulersProvider;
   }
 
-  public void getWeatherData() {
-    weatherUseCase.execute()
+  public void getWeatherData(double latitude, double longitude) {
+    weatherUseCase.execute(String.valueOf(latitude), String.valueOf(longitude))
         .subscribeOn(schedulersProvider.io())
         .subscribe(new SingleObserver<WeatherDetailsModel>() {
           @Override
@@ -50,6 +51,7 @@ public class MainViewModel extends ViewModel {
           @Override
           public void onError(Throwable e) {
             e.printStackTrace();
+            _errorMsg.postValue(e.getMessage());
           }
         });
   }
@@ -60,6 +62,10 @@ public class MainViewModel extends ViewModel {
 
   public MutableLiveData<LocationModel> getLocationLiveData() {
     return _locationModel;
+  }
+
+  public MutableLiveData<String> getErrorMsg() {
+    return _errorMsg;
   }
 
   public void onRequestPermissionRequest(int requestCode, int[] grantResults) {
@@ -92,6 +98,7 @@ public class MainViewModel extends ViewModel {
 
   private void onLocationPermissionDenied() {
     Timber.e("onLocationPermissionDenied");
+    _errorMsg.postValue("Please check enable location permission.");
   }
 
   private void getLocationSuccess(LocationModel locationModel) {
@@ -102,6 +109,7 @@ public class MainViewModel extends ViewModel {
   private void getLocationError(Throwable throwable) {
     Timber.e("getLocationError");
     throwable.printStackTrace();
+    _errorMsg.postValue(throwable.getMessage());
   }
 
   @Override
