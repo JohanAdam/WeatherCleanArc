@@ -31,6 +31,7 @@ ext {
     glassfishAnnotation = '10.0-b28'
     tedPermissionVersion = '2.2.2'
     timberVersion = '4.7.1'
+    googlePlayVersion = '17.1.0'
 }
 
 task clean(type: Delete) {

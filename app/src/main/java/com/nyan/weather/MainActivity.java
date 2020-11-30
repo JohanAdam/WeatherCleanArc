@@ -25,9 +25,10 @@ public class MainActivity extends AppCompatActivity {
   @Inject
   MainViewModelFactory viewModelFactory;
 
-  private MainViewModel mainViewModel;
+  @Inject
+  PermissionManager permissionManager;
 
-  private PermissionManager permissionManager = new PermissionManager();
+  private MainViewModel mainViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

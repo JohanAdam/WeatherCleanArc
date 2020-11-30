@@ -1,7 +1,5 @@
 package com.nyan.data.source;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.location.Location;
 import android.os.Looper;
@@ -19,8 +17,11 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import org.reactivestreams.Subscription;
+import timber.log.Timber;
 
 public class GoogleLocationDataSource {
+
+  private static final String TAG = "GoogleLocationDataSourc";
 
   private static long LOCATION_REQUEST_INTERVAL = 10000L;
   private static long LOCATION_REQUEST_FASTEST_INTERVAL = 5000L;
@@ -50,7 +51,7 @@ public class GoogleLocationDataSource {
       public void onLocationResult(LocationResult locationResult) {
         super.onLocationResult(locationResult);
         if (locationResult != null) {
-          Log.d("GLDS", "onLocationResult: " + locationResult.getLocations().size());
+          Timber.d("onLocationResult: %s", locationResult.getLocations().size());
           for (Location location: locationResult.getLocations()) {
             setLocation(location);
           }
@@ -62,18 +63,21 @@ public class GoogleLocationDataSource {
         .doOnSubscribe(new Consumer<Subscription>() {
           @Override
           public void accept(Subscription subscription) throws Exception {
+            Timber.d("accept");
             startLocationUpdate();
           }
         })
         .doOnCancel(new Action() {
           @Override
           public void run() throws Exception {
+            Timber.d("doOnCancel");
             stopLocationUpdate();
           }
         });
   }
 
   private void startLocationUpdate() {
+    Timber.d("startLocationUpdate");
     fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
       @Override
       public void onSuccess(Location location) {
@@ -85,16 +89,19 @@ public class GoogleLocationDataSource {
   }
 
   public void stopLocationUpdate() {
+    Timber.d("stopLocationUpdate");
     fusedLocationClient.removeLocationUpdates(locationCallback);
   }
 
   private void setLocation(Location location) {
-    Log.d("GLDS", "setLocation");
-    locationSubject.onNext(
-        new LocationEntity(
-            location.getLatitude(),
-            location.getLongitude())
-    );
+    Timber.d("setLocation");
+    if (location != null ){
+      locationSubject.onNext(
+          new LocationEntity(
+              location.getLatitude(),
+              location.getLongitude())
+      );
+    }
   }
 
   public Flowable<LocationEntity> getLocationObservable() {

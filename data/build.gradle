@@ -50,7 +50,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3Version"
 
     //Location.
-    implementation "com.google.android.gms:play-services-location:17.1.0"
+    implementation "com.google.android.gms:play-services-location:$googlePlayVersion"
 
-
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 }
