@@ -1,4 +1,4 @@
-package com.nyan.weather;
+package com.nyan.weather.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.nyan.domain.models.WeatherDetailsModel;
+import com.nyan.weather.R;
 import com.nyan.weather.databinding.ActivityMainBinding;
 import com.nyan.weather.utils.PermissionManager;
 import com.nyan.weather.viewmodel.MainViewModel;

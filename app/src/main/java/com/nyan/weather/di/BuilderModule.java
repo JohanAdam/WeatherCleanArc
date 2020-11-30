@@ -1,6 +1,6 @@
 package com.nyan.weather.di;
 
-import com.nyan.weather.MainActivity;
+import com.nyan.weather.ui.MainActivity;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
