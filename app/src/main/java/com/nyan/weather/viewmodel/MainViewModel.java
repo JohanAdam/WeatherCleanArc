@@ -2,7 +2,6 @@ package com.nyan.weather.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.nyan.domain.models.LocationDomainModel;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.domain.usecases.GetLocationUseCase;
 import com.nyan.domain.usecases.GetWeatherDetailsUseCase;
@@ -12,8 +11,6 @@ import com.nyan.weather.utils.PermissionManager;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import timber.log.Timber;
 
 
@@ -66,7 +63,7 @@ public class MainViewModel extends ViewModel {
   }
 
   public void onRequestPermissionRequest(int requestCode, int[] grantResults) {
-    Timber.d("onRequestPermissionRequest " + requestCode + " grantResult " + grantResults);
+    Timber.d("onRequestPermissionRequest ");
     if (requestCode == PermissionManager.LOCATION_PERMISSION_REQUEST_CODE) {
       if (grantResults.length != 0) {
         switch (grantResults[0]) {
@@ -86,24 +83,10 @@ public class MainViewModel extends ViewModel {
     Disposable disposable = locationUseCase
         .build()
         .subscribeOn(schedulersProvider.io())
-        .map(new Function<LocationDomainModel, LocationModel>() {
-          @Override
-          public LocationModel apply(LocationDomainModel locationDomainModel) throws Exception {
-            return new LocationModel(locationDomainModel.getLatitude(), locationDomainModel.getLongitude());
-          }
-        })
-        .doOnError(new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            getLocationError(throwable);
-          }
-        })
-        .subscribe(new Consumer<LocationModel>() {
-          @Override
-          public void accept(LocationModel locationModel) throws Exception {
-            getLocationSuccess(locationModel);
-          }
-        });
+        .map(locationDomainModel ->
+            new LocationModel(locationDomainModel.getLatitude(), locationDomainModel.getLongitude()))
+        .doOnError(this::getLocationError)
+        .subscribe(this::getLocationSuccess);
     compositeDisposable.add(disposable);
   }
 

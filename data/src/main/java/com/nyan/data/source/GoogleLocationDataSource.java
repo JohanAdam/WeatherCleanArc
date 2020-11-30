@@ -1,8 +1,11 @@
 package com.nyan.data.source;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.location.Location;
 import android.os.Looper;
+import android.util.Log;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -47,6 +50,7 @@ public class GoogleLocationDataSource {
       public void onLocationResult(LocationResult locationResult) {
         super.onLocationResult(locationResult);
         if (locationResult != null) {
+          Log.d("GLDS", "onLocationResult: " + locationResult.getLocations().size());
           for (Location location: locationResult.getLocations()) {
             setLocation(location);
           }
@@ -80,11 +84,12 @@ public class GoogleLocationDataSource {
         Looper.getMainLooper());
   }
 
-  private void stopLocationUpdate() {
+  public void stopLocationUpdate() {
     fusedLocationClient.removeLocationUpdates(locationCallback);
   }
 
   private void setLocation(Location location) {
+    Log.d("GLDS", "setLocation");
     locationSubject.onNext(
         new LocationEntity(
             location.getLatitude(),

@@ -23,6 +23,7 @@ public class LocationRepositoryImpl implements LocationRepository {
         .map(new Function<LocationEntity, LocationDomainModel>() {
           @Override
           public LocationDomainModel apply(LocationEntity locationEntity) throws Exception {
+            googleLocationDataSource.stopLocationUpdate();
             return locationEntity.mapToDomain();
           }
         });
