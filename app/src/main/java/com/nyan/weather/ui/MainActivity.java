@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public void onError(String msg) {
-        showSnackbar(msg, binding.getRoot(), Snackbar.LENGTH_INDEFINITE);
+        showSnackbar(msg, binding.getRoot(), Snackbar.LENGTH_LONG);
       }
     });
   }
