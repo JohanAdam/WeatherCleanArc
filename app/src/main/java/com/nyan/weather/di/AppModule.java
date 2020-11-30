@@ -11,6 +11,7 @@ import com.nyan.domain.repositories.RemoteRepo;
 import com.nyan.weather.App;
 import com.nyan.weather.rx.SchedulersFacade;
 import com.nyan.weather.rx.SchedulersProvider;
+import com.nyan.weather.utils.LocationChecker;
 import com.nyan.weather.utils.PermissionManager;
 import dagger.Module;
 import dagger.Provides;
@@ -32,6 +33,11 @@ public class AppModule {
   @Provides
   PermissionManager providerPermissionManager() {
     return new PermissionManager();
+  }
+
+  @Provides
+  LocationChecker providerLocationChecker(Context context) {
+    return new LocationChecker(context);
   }
 
   @Provides

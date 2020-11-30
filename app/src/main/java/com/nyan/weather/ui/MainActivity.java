@@ -10,6 +10,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.nyan.domain.models.WeatherDetailsModel;
 import com.nyan.weather.R;
 import com.nyan.weather.databinding.ActivityMainBinding;
+import com.nyan.weather.utils.LocationChecker;
+import com.nyan.weather.utils.LocationChecker.LocationCheckerCallback;
 import com.nyan.weather.utils.PermissionManager;
 import com.nyan.weather.viewmodel.MainViewModel;
 import com.nyan.weather.viewmodel.MainViewModelFactory;
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
   @Inject
   PermissionManager permissionManager;
+
+  @Inject
+  LocationChecker locationChecker;
 
   private MainViewModel mainViewModel;
 
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     });
 
     mainViewModel.getErrorMsg().observe(this, msg -> {
-      Snackbar.make(rootView, msg, Snackbar.LENGTH_LONG).show();
+      showSnackbar(msg, rootView, Snackbar.LENGTH_LONG);
     });
 
     requestLocationPermission();
@@ -92,11 +97,26 @@ public class MainActivity extends AppCompatActivity {
 
   private void requestLocationPermission() {
     Timber.d("requestLocationPermission");
-    if (permissionManager.isLocationPermissionGranted(this)) {
-      mainViewModel.onLocationPermissionGranted();
-    } else {
-      permissionManager.requestLocationPermission(this);
-    }
+
+    locationChecker.checkLocationEnable(new LocationCheckerCallback() {
+      @Override
+      public void onSuccess() {
+        if (permissionManager.isLocationPermissionGranted(MainActivity.this)) {
+          mainViewModel.onLocationPermissionGranted();
+        } else {
+          permissionManager.requestLocationPermission(MainActivity.this);
+        }
+      }
+
+      @Override
+      public void onError(String msg) {
+        showSnackbar(msg, binding.getRoot(), Snackbar.LENGTH_INDEFINITE);
+      }
+    });
+  }
+
+  private void showSnackbar(String msg, View root, int length) {
+    Snackbar.make(root, msg, length).show();
   }
 
   @Override
