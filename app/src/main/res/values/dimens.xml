@@ -1,3 +1,7 @@
 <resources>
   <dimen name="fab_margin">16dp</dimen>
+  <dimen name="margin_main_page_top">18dp</dimen>
+  <dimen name="radius_card">16dp</dimen>
+  <dimen name="padding_sub_card">4dp</dimen>
+  <dimen name="text_size_sub_card">16sp</dimen>
 </resources>

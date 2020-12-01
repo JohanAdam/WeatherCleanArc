@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:id="@+id/navigation_first"
+    android:icon="@drawable/ic_home"
+    app:iconTint="@color/colorDarkBlue"
+    android:title="Home"/>
+
+  <item
+    android:id="@+id/navigation_second"
+    android:icon="@drawable/ic_explore"
+    app:iconTint="@color/colorDarkBlue"
+    android:title="Explore"/>
+
+  <item
+    android:id="@+id/navigation_third"
+    android:icon="@drawable/ic_support"
+    app:iconTint="@color/colorDarkBlue"
+    android:title="Support"/>
+
+</menu>

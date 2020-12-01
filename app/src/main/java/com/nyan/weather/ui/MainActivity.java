@@ -1,5 +1,6 @@
 package com.nyan.weather.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     mainViewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
     binding.fab.setOnClickListener(view -> requestLocationPermission());
+
+    binding.fab.setOnLongClickListener(view -> {
+      startActivity(new Intent(this, SampleActivity.class));
+      return false;
+    });
 
     mainViewModel.getWeatherLiveData().observe(this, weatherDetailsModel -> {
       Timber.d("onChanged");
