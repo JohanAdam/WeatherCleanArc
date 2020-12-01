@@ -1,7 +1,7 @@
 # WeatherCleanArc
 Weather app with Clean Architecture.
 
-## Build using :
+## Used Technologies and Patterns :
 - Clean Architecture.
 - Java
 - RxJava
