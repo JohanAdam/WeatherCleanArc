@@ -14,7 +14,7 @@ public class Main {
     @SerializedName("temp")
     private Double mTemp;
     @SerializedName("temp_max")
-    private Long mTempMax;
+    private Double mTempMax;
     @SerializedName("temp_min")
     private Double mTempMin;
 
@@ -34,7 +34,7 @@ public class Main {
         return mTemp;
     }
 
-    public Long getTempMax() {
+    public Double getTempMax() {
         return mTempMax;
     }
 
@@ -42,56 +42,28 @@ public class Main {
         return mTempMin;
     }
 
-    public static class Builder {
+    public void setFeelsLike(Double mFeelsLike) {
+        this.mFeelsLike = mFeelsLike;
+    }
 
-        private Double mFeelsLike;
-        private Long mHumidity;
-        private Long mPressure;
-        private Double mTemp;
-        private Long mTempMax;
-        private Double mTempMin;
+    public void setHumidity(Long mHumidity) {
+        this.mHumidity = mHumidity;
+    }
 
-        public Main.Builder withFeelsLike(Double feelsLike) {
-            mFeelsLike = feelsLike;
-            return this;
-        }
+    public void setPressure(Long mPressure) {
+        this.mPressure = mPressure;
+    }
 
-        public Main.Builder withHumidity(Long humidity) {
-            mHumidity = humidity;
-            return this;
-        }
+    public void setTemp(Double mTemp) {
+        this.mTemp = mTemp;
+    }
 
-        public Main.Builder withPressure(Long pressure) {
-            mPressure = pressure;
-            return this;
-        }
+    public void setTempMax(Double mTempMax) {
+        this.mTempMax = mTempMax;
+    }
 
-        public Main.Builder withTemp(Double temp) {
-            mTemp = temp;
-            return this;
-        }
-
-        public Main.Builder withTempMax(Long tempMax) {
-            mTempMax = tempMax;
-            return this;
-        }
-
-        public Main.Builder withTempMin(Double tempMin) {
-            mTempMin = tempMin;
-            return this;
-        }
-
-        public Main build() {
-            Main main = new Main();
-            main.mFeelsLike = mFeelsLike;
-            main.mHumidity = mHumidity;
-            main.mPressure = mPressure;
-            main.mTemp = mTemp;
-            main.mTempMax = mTempMax;
-            main.mTempMin = mTempMin;
-            return main;
-        }
-
+    public void setTempMin(Double mTempMin) {
+        this.mTempMin = mTempMin;
     }
 
 }

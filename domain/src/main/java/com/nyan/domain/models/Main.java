@@ -15,7 +15,7 @@ public class Main {
 
     private Double temp;
 
-    private Long temp_max;
+    private Double temp_max;
 
     private Double temp_min;
 
@@ -51,11 +51,11 @@ public class Main {
         this.temp = temp;
     }
 
-    public Long getTempMax() {
+    public Double getTempMax() {
         return temp_max;
     }
 
-    public void setTempMax(Long tempMax) {
+    public void setTempMax(Double tempMax) {
         this.temp_max = tempMax;
     }
 
